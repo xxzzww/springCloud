@@ -4,6 +4,8 @@ import com.xzw.springCloud.entities.CommonResult;
 import com.xzw.springCloud.entities.Payment;
 import com.xzw.springCloud.service.PaymentService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -14,6 +16,23 @@ import java.util.List;
 public class PaymentController {
     @Resource
     private PaymentService paymentService;
+    //服务发现  获取服务信息
+    @Resource
+    private DiscoveryClient discoveryClient;
+    //服务发现
+    @GetMapping("/payment/dis")
+    public Object discovery(){
+        List<String> service = discoveryClient.getServices();
+        for (String element :service){
+            log.info("---getServices---:"+element);
+        }
+        //一个微服务下的全部实例   指是该服务器的名称
+        List<ServiceInstance> instances = discoveryClient.getInstances("cloud-payment-service");
+        for (ServiceInstance ser : instances){
+            log.info("---getInstances---"+ser.getServiceId()+"\t"+ser.getHost()+"\t"+ser.getPort()+"\t"+ser.getUri());
+        }
+        return discoveryClient;
+    }
 //    插入操作建议用PostMapping注解
     @PostMapping("/payment/insert")
     public CommonResult insert(@RequestBody Payment payment){
