@@ -3,6 +3,8 @@ package com.xzw.springCloud.controller;
 import com.xzw.springCloud.entities.CommonResult;
 import com.xzw.springCloud.entities.Payment;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,13 +12,32 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @Slf4j
 public class OrderController {
-    public static final String payment_url="http://localhost:8001";
+    //单机版服务注册执行可以固定ip,但是集群版就要写服务名称了,让服务注册中心去负载均衡
+//    public static final String payment_url="http://localhost:8001";
+    public static final String payment_url="http://cloud-payment-service";
     @Resource
     private RestTemplate restTemplate;
+    @Resource
+    private DiscoveryClient discoveryClient;
+    //服务发现
+    @GetMapping("/payment/dis")
+    public Object discovery(){
+        List<String> service = discoveryClient.getServices();
+        for (String element :service){
+            log.info("---getServices---:"+element);
+        }
+        //一个微服务下的全部实例   指是该服务器的名称
+        List<ServiceInstance> instances = discoveryClient.getInstances("cloud-payment-service1");
+        for (ServiceInstance ser : instances){
+            log.info("---getInstances---"+ser.getServiceId()+"\t"+ser.getHost()+"\t"+ser.getPort()+"\t"+ser.getUri());
+        }
+        return discoveryClient.getInstances("cloud-payment-service1");
+    }
     @GetMapping("/consumer/payment/insert")
     public CommonResult insert(Payment payment){
         log.info("用户添加了:"+payment);

@@ -36,7 +36,7 @@ public class PaymentController {
         }
         return discoveryClient;
     }
-//    插入操作建议用PostMapping注解
+    //    插入操作建议用PostMapping注解
     @PostMapping("/payment/insert")
     public CommonResult insert(@RequestBody Payment payment){
         int result = paymentService.insert(payment);
@@ -46,7 +46,7 @@ public class PaymentController {
         }
         return new CommonResult(444,"插入数据库失败",null);
     }
-//    查询操作
+    //    查询操作
     @GetMapping("/payment/get/{id}")
     public CommonResult getPaymentByID(@PathVariable("id") Long id){
         Payment payment = paymentService.getPaymentByID(id);
@@ -56,7 +56,7 @@ public class PaymentController {
         }
         return new CommonResult(444,"查询失败,找不到该id:"+id,null);
     }
-//    查询操作
+    //    查询操作
     @GetMapping("/payment/getAll")
     public CommonResult getPaymentAll(){
         List<Payment> payment = paymentService.getPaymentAll();
