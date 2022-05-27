@@ -53,4 +53,14 @@ public class OrderController {
         log.info("用户查询所有");
         return restTemplate.getForObject(payment_url+"/payment/getAll",CommonResult.class);
     }
+    @GetMapping("/consumer/payment/getForEntity/{id}")
+    public CommonResult getgetForEntity(@PathVariable("id") Long id){
+        log.info("用户查询所有");
+        ResponseEntity<CommonResult> entity = restTemplate.getForEntity(payment_url+"/payment/get/"+id,CommonResult.class);
+        //entity.getStatusCode().后面有is1xxSuccessful到is5xxSuccessful,还有error,除了2其他都是发生错误
+        if (entity.getStatusCode().is2xxSuccessful()){
+            return entity.getBody();
+        }
+        return new CommonResult(444,"操作失败");
+    }
 }

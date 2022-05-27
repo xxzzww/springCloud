@@ -60,7 +60,7 @@ public class PaymentController {
     @GetMapping("/payment/getAll")
     public CommonResult getPaymentAll(){
         List<Payment> payment = paymentService.getPaymentAll();
-        log.info("根据id查询结果:"+payment);
+        log.info("查询所有结果:"+payment);
         if (payment!=null){
             return new CommonResult(300,"查询成功,端口号:"+serverPort,payment);
         }

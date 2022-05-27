@@ -1,0 +1,12 @@
+server:
+  port: 8021            #端口号
+spring:
+  application:
+    name: cloud-payment-service       #服务器名称
+  #####consul服务注册中心地址
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        service-name: ${spring.application.name}
