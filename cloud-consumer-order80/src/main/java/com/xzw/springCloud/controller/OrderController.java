@@ -2,6 +2,7 @@ package com.xzw.springCloud.controller;
 
 import com.xzw.springCloud.entities.CommonResult;
 import com.xzw.springCloud.entities.Payment;
+import com.xzw.springCloud.lb.LoadBalancer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -32,7 +34,7 @@ public class OrderController {
             log.info("---getServices---:"+element);
         }
         //一个微服务下的全部实例   指是该服务器的名称
-        List<ServiceInstance> instances = discoveryClient.getInstances("cloud-payment-service1");
+        List<ServiceInstance> instances = discoveryClient.getInstances("cloud-payment-service");
         for (ServiceInstance ser : instances){
             log.info("---getInstances---"+ser.getServiceId()+"\t"+ser.getHost()+"\t"+ser.getPort()+"\t"+ser.getUri());
         }
@@ -54,7 +56,7 @@ public class OrderController {
         return restTemplate.getForObject(payment_url+"/payment/getAll",CommonResult.class);
     }
     @GetMapping("/consumer/payment/getForEntity/{id}")
-    public CommonResult getgetForEntity(@PathVariable("id") Long id){
+    public CommonResult getForEntity(@PathVariable("id") Long id){
         log.info("用户查询所有");
         ResponseEntity<CommonResult> entity = restTemplate.getForEntity(payment_url+"/payment/get/"+id,CommonResult.class);
         //entity.getStatusCode().后面有is1xxSuccessful到is5xxSuccessful,还有error,除了2其他都是发生错误
@@ -62,5 +64,20 @@ public class OrderController {
             return entity.getBody();
         }
         return new CommonResult(444,"操作失败");
+    }
+    //测试自己写的轮询算法
+    @Resource
+    private LoadBalancer loadBalancer;
+
+    @GetMapping(value = "/consumer/payment/lb")
+    public String getPaymentLb(){
+        List<ServiceInstance> instances = discoveryClient.getInstances("cloud-payment-service");
+        if (instances==null || instances.size()<=0){
+            return null;
+        }
+        ServiceInstance serviceInstance = loadBalancer.instances(instances);
+        URI uri = serviceInstance.getUri();
+        System.out.println(uri);
+        return restTemplate.getForObject(uri+"/payment/lb",String.class);
     }
 }

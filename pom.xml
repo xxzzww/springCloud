@@ -17,6 +17,7 @@
       <module>cloud-provider-payment8014</module>
       <module>cloud-providerConsul-payment8021</module>
     <module>cloud-consumerconsul-order80</module>
+      <module>cloud-consumer-feign-order80</module>
   </modules>
   <packaging>pom</packaging>
   <!--统一管理jar包版本-->

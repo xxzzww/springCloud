@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @Slf4j
@@ -66,4 +67,20 @@ public class PaymentController {
         }
         return new CommonResult(444,"查询失败",null);
     }
+    //手写负载均衡的轮询算法测试,返回端口
+    @GetMapping(value = "/payment/lb")
+    public String getPaymentLB() {
+        return serverPort;
+    }
+    //超时测试
+    @GetMapping(value = "/payment/timeout")
+    public String paymentFeignTimePut(){
+        try {
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return serverPort;
+    }
+
 }
