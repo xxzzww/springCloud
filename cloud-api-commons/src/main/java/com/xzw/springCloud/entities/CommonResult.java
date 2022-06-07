@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommonResult <T>{
+    private static final long serialVersionUID = -1245787855635487949L;
     //异常编号
     private Integer code;
     //异常信息

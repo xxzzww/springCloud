@@ -39,13 +39,35 @@ public class PaymentController {
     }
 //    插入操作建议用PostMapping注解
     @PostMapping("/payment/insert")
-    public CommonResult insert(@RequestBody Payment payment){
+    //添加@RequestBody注解会报错Required request body is missing,百度没有解决,但是发现把注解去掉就行了
+//    public CommonResult insert(@RequestBody Payment payment){
+    public CommonResult insert( Payment payment){
         int result = paymentService.insert(payment);
         log.info("插入结果:"+(result>0?"成功":"失败"));
         if (result>0){
-            return new CommonResult(222,"插入数据库成功,端口号:"+serverPort,result);
+            return new CommonResult(200,"插入数据库成功,端口号:"+serverPort,result);
         }
-        return new CommonResult(444,"插入数据库失败",null);
+        return new CommonResult(500,"插入数据库失败",null);
+    }
+    @PostMapping("/payment/cs")
+    public CommonResult insertCs(Payment payment){
+//        Payment payment = new Payment(id,serial);
+        int result = paymentService.insert(payment);
+        log.info("插入结果:"+(result>0?"成功":"失败"));
+        if (result>0){
+            return new CommonResult(200,"插入数据库成功,端口号:"+serverPort,result);
+        }
+        return new CommonResult(500,"插入数据库失败",null);
+    }
+    @GetMapping("/payment/getcs")
+    public CommonResult GetMappinginsertCs( Payment payment){
+//        Payment payment = new Payment(id,serial);
+        int result = paymentService.insert(payment);
+        log.info("插入结果:"+(result>0?"成功":"失败"));
+        if (result>0){
+            return new CommonResult(200,"插入数据库成功,端口号:"+serverPort,result);
+        }
+        return new CommonResult(500,"插入数据库失败",null);
     }
 //    查询操作
     @GetMapping("/payment/get/{id}")
@@ -53,9 +75,9 @@ public class PaymentController {
         Payment payment = paymentService.getPaymentByID(id);
         log.info("根据id查询结果:"+payment);
         if (payment!=null){
-            return new CommonResult(333,"查询成功,端口号:"+serverPort,payment);
+            return new CommonResult(200,"查询成功,端口号:"+serverPort,payment);
         }
-        return new CommonResult(444,"查询失败,找不到该id:"+id,null);
+        return new CommonResult(404,"查询失败,找不到该id:"+id,null);
     }
 //    查询操作
     @GetMapping("/payment/getAll")
@@ -63,9 +85,9 @@ public class PaymentController {
         List<Payment> payment = paymentService.getPaymentAll();
         log.info("查询所有结果:"+payment);
         if (payment!=null){
-            return new CommonResult(300,"查询成功,端口号:"+serverPort,payment);
+            return new CommonResult(200,"查询成功,端口号:"+serverPort,payment);
         }
-        return new CommonResult(444,"查询失败",null);
+        return new CommonResult(404,"查询失败",null);
     }
     //手写负载均衡的轮询算法测试,返回端口
     @GetMapping(value = "/payment/lb")

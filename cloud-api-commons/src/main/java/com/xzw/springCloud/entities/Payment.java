@@ -9,6 +9,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Payment implements Serializable {
+    private static final long serialVersionUID = -1245787895635487945L;
     private Long id;
     private String serial;
 }

@@ -39,7 +39,8 @@ public class PaymentController {
     }
     //    插入操作建议用PostMapping注解
     @PostMapping("/payment/insert")
-    public CommonResult insert(@RequestBody Payment payment){
+    public CommonResult insert( Payment payment){
+//    public CommonResult insert(@RequestBody Payment payment){
         int result = paymentService.insert(payment);
         log.info("插入结果:"+(result>0?"成功":"失败"));
         if (result>0){
