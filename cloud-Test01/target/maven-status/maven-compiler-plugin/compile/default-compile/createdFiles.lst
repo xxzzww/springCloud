@@ -1,7 +1,0 @@
-com\xzw\springCloud\entities\Payment.class
-com\xzw\springCloud\paymentMain8001.class
-com\xzw\springCloud\entities\CommonResult.class
-com\xzw\springCloud\service\PaymentService.class
-com\xzw\springCloud\Mapper\PaymentMapper.class
-com\xzw\springCloud\service\impl\PaymentServiceImpl.class
-com\xzw\springCloud\controller\PaymentController.class
